@@ -1,22 +1,33 @@
 import './app-filter.css';
 
-const AppFilter = () => {
-  return (
-    <div className="btn-group">
-      <button className="btn btn-light"
-              type="button">
-                Все сотрудники
-      </button>
-      <button className="btn btn-outline-light"
-              type="button">
-                Сотрудники на повышение
-      </button>
-      <button className="btn btn-outline-light"
-              type="button">
-                З/П больше 1000 долларов
-      </button>
-    </div>
-  )
+const AppFilter = (props) => {
+
+    //Создание кнопок на верстке с помощью БД
+    const buttonsData = [
+      {name: 'all', label: 'Все сотрудники'},
+      {name: 'rise', label: 'Сотрудники на повышение'},
+      {name: 'over1000', label: 'З/П больше 1000 долларов'},
+    ];
+
+    const buttons = buttonsData.map(({name, label}) => {
+      const active = props.filter === name; //сравнение props.filter и name, возврат значения true/false
+      const clazz = active ? 'btn-light' : 'btn-outline-light';
+      return (
+        <button className={`btn ${clazz}`}
+                type="button"
+                onClick={() => props.onFilterSelect(name)}
+                key={name}>
+                {label}
+        </button>
+      )
+    })
+
+    return (
+      <div className="btn-group">
+        {buttons}
+      </div>
+    )
+  
 }
 
 export default AppFilter;

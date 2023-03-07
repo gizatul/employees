@@ -12,9 +12,11 @@ class App extends Component {
     this.state = {
       data: [
         {name: 'John Smith', salary: 800, increase: true, rise: true, id: 1},
-        {name: 'Alex Miller', salary: 900, increase: false, rise: false, id: 2},
-        {name: 'Tony Brown', salary: 1000, increase: false, rise: false, id: 3},
-      ]
+        {name: 'Alex Miller', salary: 1000, increase: false, rise: false, id: 2},
+        {name: 'Tony Brown', salary: 1200, increase: false, rise: false, id: 3},
+      ],
+      term: '', //переменная для поиска
+      filter: 'all',
     }
     this.maxId = 4;
   }
@@ -97,10 +99,50 @@ class App extends Component {
     }));
   }
 
+  filterList = (items, filter) => {
+    switch (filter) {
+      case 'rise': 
+        return items.filter(item => item.rise);
+      case 'over1000':
+        return items.filter(item => item.salary > 1000);
+      default: 
+        return items;
+    }
+  }
+
+  onFilterSelect = (filter) => {
+    this.setState({filter});
+  }
+
+  searchEmp = (items, term) => { //items - массив данных, кот-е будем фильтровать, term - строка по которой поиск
+    if (term.length === 0) { //если строка пустая, то возвращаем все массивы
+      return items;
+    }
+    return items.filter(item => {
+      return item.name.toLowerCase().indexOf(term.toLowerCase()) > -1 //возврат массива элементов, кот-е подходят под поиск term //indexOf позволяет искать подстроки // -1 когда indexOF не возвращает ничего //term -кусочек строки который пытаемся найти //приведение в 1 регистр для лучшего поиска
+    })
+  }
+
+  onUpdateSearch = (term) => {
+    this.setState({term: term})
+  }
+  //Ф-я для получения salary из инпутов
+  onChangeSalary = (newSalary, name) => {
+    this.setState(({data}) => ({
+      data: data.map(person => {
+        if(person.name === name) {
+          return {...person, salary: newSalary.replace(/[^0-9]/g, '')}
+        }
+        return person;
+      })
+    }))
+  }
 
   render () {
     const employees = this.state.data.length;
     const increased = this.state.data.filter(item => item.increase).length; //возвращаем кол-во объектов с increase = true
+    const {data, term, filter} = this.state;
+    const visibleData = this.filterList(this.searchEmp(data, term), filter); //Проведение двойной фильтрации //сначала по поиску, потом по фильтру
 
     return (
       <div className="app">
@@ -108,13 +150,17 @@ class App extends Component {
           empNum={employees}
           incNum={increased}/>
         <div className="search-panel">
-          <SearchPanel/>
-          <AppFilter/>
+          <SearchPanel 
+            onUpdateSearch = {this.onUpdateSearch}/>
+          <AppFilter
+            filter={filter}
+            onFilterSelect={this.onFilterSelect}/>
         </div>
         <EmployeesList 
-          data={this.state.data}
+          data={visibleData}
           onDelete={this.deleteItem}
-          onToggleProp={this.onToggleProp}/>
+          onToggleProp={this.onToggleProp}
+          onChangeSalary={this.onChangeSalary}/>
         <EmployeesAddForm onAdd={this.addItem}/> {/*Данные идут из employees ч/з onAdd в addItem */}
       </div>
     )

@@ -8,7 +8,7 @@ class EmployeesAddForm extends Component {
             name: '', //название в верстке должны совпасть с state
             salary: '',
         }
-    }
+    }   
 
     onValueChange = (e) => {
         this.setState({
