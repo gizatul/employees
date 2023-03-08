@@ -12,11 +12,12 @@ const AppFilter = (props) => {
     const buttons = buttonsData.map(({name, label}) => {
       const active = props.filter === name; //сравнение props.filter и name, возврат значения true/false
       const clazz = active ? 'btn-light' : 'btn-outline-light';
+
       return (
         <button className={`btn ${clazz}`}
                 type="button"
                 onClick={() => props.onFilterSelect(name)}
-                key={name}>
+                key={name}  >
                 {label}
         </button>
       )
