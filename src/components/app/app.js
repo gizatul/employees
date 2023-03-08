@@ -15,7 +15,7 @@ class App extends Component {
         {name: 'Alex Miller', salary: 1000, increase: false, rise: false, id: 2},
         {name: 'Tony Brown', salary: 1200, increase: false, rise: false, id: 3},
       ],
-      term: '', //переменная для поиска
+      term: '', 
       filter: 'all',
     }
     this.maxId = 4;
@@ -23,12 +23,6 @@ class App extends Component {
 
   deleteItem = (idDeleteItem) => {
     this.setState(({data}) => {
-      // const index = data.findIndex(elem => elem.id === idDeleteItem); //elem - каждый элемент по порядку(в данном случае {name: ..., salary: ..., increase: ..., id: ..}) // возврат индекса на котором найден элемент
-
-      // const before = data.slice(0, index); //отрезаем с первого до нужного объекта
-      // const after = data.slice(index + 1); //отрезаем с последующего элемента после index и до конца
-      // const newArr = [...before, ...after];
-
       return {
         data: data.filter(item => item.id !== idDeleteItem), 
       }
@@ -47,54 +41,19 @@ class App extends Component {
       this.setState(({data}) => {
         const newArr =[...data, newItem];
         return {
-          data: newArr
+          data: newArr,
         }
       });
     }
   }
-  //Ф-я тоггла премии
-  // onToggleIncrease = (targetId) => {
-  //   // 1-й способ
-  //   // this.setState(({data}) => { //меняем состояние наших данных
-  //   //   const index = data.findIndex(elem => elem.id === targetId); //получаем индекс изменяемого объекта
-  //   //   const old = data[index]; //промежуточный старый наш изменяемый объект
-  //   //   const newItem = {...old, increase: !old.increase} //1. развернутый объект old - уже новый объект //2. increase заменяет старый increase и присваивает противоположное значение от old.increase
-  //   //   const newArr = [...data.slice(0, index), newItem, ...data.slice(index + 1)]; //формируем новый измененный массив данных
-  //   //   return {
-  //   //     data: newArr,
-  //   //   }
-  //   // });
-
-  //   //2-й способ
-  //   this.setState(({data}) => ({ //меняем состояние наших данных
-  //     data: data.map(item => { //map возвращает новый массив ч/з cb-ф-ю далее
-  //       if (item.id === targetId) { //если совпали id
-  //         return {...item, increase: !item.increase} //nj возврат объекта,кот-й содержит старые св-ва и противоположный increase
-  //       }
-  //       return item; //если условие не совпало то просто возврат объекта
-  //     })
-  //   }));
-  // }
-//Ф-я тоггла звездочки
-  // onToggleRise = (targetId) => { //переключение состояние сотрудника, на звездочку
-  //   this.setState(({data}) => ({ //меняем состояние наших данных
-  //     data: data.map(item => { //map возвращает новый массив ч/з cb-ф-ю далее
-  //       if (item.id === targetId) { //если совпали id
-  //         return {...item, rise: !item.rise} //nj возврат объекта,кот-й содержит старые св-ва и противоположный increase
-  //       }
-  //       return item; //если условие не совпало то просто возврат объекта
-  //     })
-  //   }));
-  // }
-
-  //Пример оптимизации кода (объединения) onToggleIncrease и onToggleRise
+  
   onToggleProp = (targetId, prop) => {
-    this.setState(({data}) => ({ //меняем состояние наших данных //Запись (({data}) => ({}) Это тоже самое, что и (({data}) => {return {}}. То есть внутри мы возвращаем объект, но используем еще одну пару {} и return. 
-      data: data.map(item => { //map возвращает новый массив ч/з cb-ф-ю далее
-        if (item.id === targetId) { //если совпали id
-          return {...item, [prop]: !item[prop]} //nj возврат объекта,кот-й содержит старые св-ва и противоположный increase //[prop] - позволяет в ключ объекта динамические помещать другие сущности.
+    this.setState(({data}) => ({ 
+      data: data.map(item => { 
+        if (item.id === targetId) { 
+          return {...item, [prop]: !item[prop]} 
         }
-        return item; //если условие не совпало то просто возврат объекта
+        return item; 
       })
     }));
   }
@@ -114,19 +73,19 @@ class App extends Component {
     this.setState({filter});
   }
 
-  searchEmp = (items, term) => { //items - массив данных, кот-е будем фильтровать, term - строка по которой поиск
-    if (term.length === 0) { //если строка пустая, то возвращаем все массивы
+  searchEmp = (items, term) => { 
+    if (term.length === 0) { 
       return items;
     }
     return items.filter(item => {
-      return item.name.toLowerCase().indexOf(term.toLowerCase()) > -1 //возврат массива элементов, кот-е подходят под поиск term //indexOf позволяет искать подстроки // -1 когда indexOF не возвращает ничего //term -кусочек строки который пытаемся найти //приведение в 1 регистр для лучшего поиска
+      return item.name.toLowerCase().indexOf(term.toLowerCase()) > -1;
     })
   }
 
   onUpdateSearch = (term) => {
     this.setState({term: term})
   }
-  //Ф-я для получения salary из инпутов
+  
   onChangeSalary = (newSalary, name) => {
     this.setState(({data}) => ({
       data: data.map(person => {
@@ -140,9 +99,9 @@ class App extends Component {
 
   render () {
     const employees = this.state.data.length;
-    const increased = this.state.data.filter(item => item.increase).length; //возвращаем кол-во объектов с increase = true
+    const increased = this.state.data.filter(item => item.increase).length; 
     const {data, term, filter} = this.state;
-    const visibleData = this.filterList(this.searchEmp(data, term), filter); //Проведение двойной фильтрации //сначала по поиску, потом по фильтру
+    const visibleData = this.filterList(this.searchEmp(data, term), filter); 
 
     return (
       <div className="app">
@@ -161,7 +120,7 @@ class App extends Component {
           onDelete={this.deleteItem}
           onToggleProp={this.onToggleProp}
           onChangeSalary={this.onChangeSalary}/>
-        <EmployeesAddForm onAdd={this.addItem}/> {/*Данные идут из employees ч/з onAdd в addItem */}
+        <EmployeesAddForm onAdd={this.addItem}/>
       </div>
     )
   }

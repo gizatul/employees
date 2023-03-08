@@ -5,22 +5,22 @@ class EmployeesAddForm extends Component {
     constructor (props) {
         super(props);
         this.state = {
-            name: '', //название в верстке должны совпасть с state
+            name: '', 
             salary: '',
         }
     }   
 
     onValueChange = (e) => {
         this.setState({
-            [e.target.name]: e.target.value //c помощью e.target.name можно достучаться до элемента на котором происходит событие //записываем св-во в объект
+            [e.target.name]: e.target.value 
         })
     }
 
     onSubmit = (e) => {
-        e.preventDefault(); //сброс станд. настроек
-        this.props.onAdd(this.state.name, this.state.salary); //данные полученные из верстки из пропсов name(this.state.name) и salary(this.state.salary) идут наверх ч/з onAdd родителю в app.js
+        e.preventDefault(); 
+        this.props.onAdd(this.state.name, this.state.salary); 
         this.setState({
-            name: '', //возврат пустых значений для очистки полей формы в верстке
+            name: '', 
             salary: '',
         });
     }
